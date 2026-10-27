@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun StreamOnnHome() {
     var selectedTab by remember { mutableIntStateOf(0) }
-    var showProfile by remember { mutableStateOf("Home") }
+    var currentScreen by remember { mutableStateOf("Home") }
 
     Scaffold(
         containerColor = AppBackground,
@@ -154,7 +154,10 @@ fun StreamOnnHome() {
 }
 
 @Composable
-private fun HomeContent(modifier: Modifier = Modifier) {
+private fun HomeContent(
+    modifier: Modifier = Modifier,
+    onProfileClick: () -> Unit
+) {
     var searchText by remember { mutableStateOf("") }
 
     val recentlyPlayed = listOf(
@@ -210,7 +213,7 @@ private fun HomeContent(modifier: Modifier = Modifier) {
                         .clip(CircleShape)
                         .background(AccentGreen)
                         .clickable {
-                            // Open profile screen
+                            onProfileClick()
                         },
                     contentAlignment = Alignment.Center
                 ) {
@@ -476,6 +479,37 @@ private fun SimpleTabScreen(
             text = subtitle,
             fontSize = 16.sp,
             color = SecondaryText
+        )
+    }
+}
+
+@Composable
+private fun DetailScreen(
+    title: String,
+    subtitle: String,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(AppBackground)
+            .padding(20.dp)
+    ) {
+        Text(
+            text = "←  $title",
+            color = PrimaryText,
+            fontSize = 25.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.clickable { onBack() }
+        )
+
+        Spacer(Modifier.height(24.dp))
+
+        Text(
+            text = subtitle,
+            color = SecondaryText,
+            fontSize = 16.sp
         )
     }
 }
