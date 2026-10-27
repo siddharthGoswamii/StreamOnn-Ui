@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.streamonn.ui.theme.StreamOnnTheme
+import androidx.compose.foundation.clickable
 
 private val AppBackground = Color(0xFF101010)
 private val CardBackground = Color(0xFF202020)
