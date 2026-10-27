@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun StreamOnnHome() {
     var selectedTab by remember { mutableIntStateOf(0) }
-    var showProfile by remember { mutableStateOf(false) }
+    var showProfile by remember { mutableStateOf("Home") }
 
     Scaffold(
         containerColor = AppBackground,
@@ -82,7 +82,10 @@ fun StreamOnnHome() {
                 tabs.forEachIndexed { index, title ->
                     NavigationBarItem(
                         selected = selectedTab == index,
-                        onClick = { selectedTab = index },
+                        onClick = {
+                            selectedTab = index
+                            currentScreen = title
+                        },
                         icon = {
                             Text(
                                 text = icons[index],
@@ -109,20 +112,43 @@ fun StreamOnnHome() {
             }
         }
     ) { innerPadding ->
-        when (selectedTab) {
-            0 -> HomeContent(
-                modifier = Modifier.padding(innerPadding)
+        when (currentScreen) {
+            "Home" -> HomeContent(
+                modifier = Modifier.padding(innerPadding),
+                onProfileClick = { currentScreen = "Profile" }
             )
-            1 -> SimpleTabScreen(
+
+            "Search" -> SimpleTabScreen(
                 title = "Search",
                 subtitle = "Find your next favourite song",
                 modifier = Modifier.padding(innerPadding)
             )
-            else -> SimpleTabScreen(
+
+            "Library" -> SimpleTabScreen(
                 title = "Your Library",
                 subtitle = "Your music will live here",
                 modifier = Modifier.padding(innerPadding)
             )
+
+            "Profile" -> ProfileScreen(
+                onBack = { currentScreen = "Home" },
+                onOptionClick = { currentScreen = it },
+                modifier = Modifier.padding(innerPadding)
+            )
+
+            "Account", "Settings", "About StreamOnn", "Edit Profile" ->
+                DetailScreen(
+                    title = currentScreen,
+                    subtitle = when (currentScreen) {
+                        "Account" -> "Manage your StreamOnn account."
+                        "Settings" -> "Your app preferences will appear here."
+                        "About StreamOnn" ->
+                            "Your music, your world. StreamOnn is your personal music streaming experience."
+                        else -> "Profile editing will be added here."
+                    },
+                    onBack = { currentScreen = "Profile" },
+                    modifier = Modifier.padding(innerPadding)
+                )
         }
     }
 }
