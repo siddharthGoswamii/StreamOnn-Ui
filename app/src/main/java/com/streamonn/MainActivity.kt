@@ -182,7 +182,10 @@ private fun HomeContent(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .size(46.dp)
                         .clip(CircleShape)
-                        .background(AccentGreen),
+                        .background(AccentGreen)
+                        .clickable {
+                            // Open profile screen
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
