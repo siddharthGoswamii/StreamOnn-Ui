@@ -67,6 +67,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun StreamOnnHome() {
     var selectedTab by remember { mutableIntStateOf(0) }
+    var showProfile by remember { mutableStateOf(false) }
 
     Scaffold(
         containerColor = AppBackground,
