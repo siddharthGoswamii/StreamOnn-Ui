@@ -122,43 +122,73 @@ fun StreamOnnHome() {
             }
         }
     ) { innerPadding ->
-        when (currentScreen) {
-            "Home" -> HomeContent(
-                modifier = Modifier.padding(innerPadding),
-                onProfileClick = { currentScreen = "Profile" }
-            )
 
-            "Search" -> SimpleTabScreen(
-                title = "Search",
-                subtitle = "Find your next favourite song",
-                modifier = Modifier.padding(innerPadding)
-            )
+        AnimatedContent(
+            targetState = currentScreen,
+            transitionSpec = {
+                (
+                        fadeIn(animationSpec = tween(250)) +
+                                slideInHorizontally(
+                                    animationSpec = tween(300),
+                                    initialOffsetX = { it / 5 }
+                                )
+                        ).togetherWith(
+                        fadeOut(animationSpec = tween(150)) +
+                                slideOutHorizontally(
+                                    animationSpec = tween(250),
+                                    targetOffsetX = { -it / 6 }
+                                )
+                    ) using SizeTransform(clip = false)
+            },
+            label = "screen_transition"
+        ) { screen ->
 
-            "Library" -> SimpleTabScreen(
-                title = "Your Library",
-                subtitle = "Your music will live here",
-                modifier = Modifier.padding(innerPadding)
-            )
+            when (screen) {
+                "Home" -> HomeContent(
+                    modifier = Modifier.padding(innerPadding),
+                    onProfileClick = {
+                        currentScreen = "Profile"
+                    }
+                )
 
-            "Profile" -> ProfileScreen(
-                onBack = { currentScreen = "Home" },
-                onOptionClick = { currentScreen = it },
-                modifier = Modifier.padding(innerPadding)
-            )
-
-            "Account", "Settings", "About StreamOnn", "Edit Profile" ->
-                DetailScreen(
-                    title = currentScreen,
-                    subtitle = when (currentScreen) {
-                        "Account" -> "Manage your StreamOnn account."
-                        "Settings" -> "Your app preferences will appear here."
-                        "About StreamOnn" ->
-                            "Your music, your world. StreamOnn is your personal music streaming experience."
-                        else -> "Profile editing will be added here."
-                    },
-                    onBack = { currentScreen = "Profile" },
+                "Search" -> SimpleTabScreen(
+                    title = "Search",
+                    subtitle = "Find your next favourite song",
                     modifier = Modifier.padding(innerPadding)
                 )
+
+                "Library" -> SimpleTabScreen(
+                    title = "Your Library",
+                    subtitle = "Your music will live here",
+                    modifier = Modifier.padding(innerPadding)
+                )
+
+                "Profile" -> ProfileScreen(
+                    onBack = {
+                        currentScreen = "Home"
+                    },
+                    onOptionClick = { option ->
+                        currentScreen = option
+                    },
+                    modifier = Modifier.padding(innerPadding)
+                )
+
+                "Account", "Settings", "About StreamOnn", "Edit Profile" ->
+                    DetailScreen(
+                        title = screen,
+                        subtitle = when (screen) {
+                            "Account" -> "Manage your StreamOnn account."
+                            "Settings" -> "Your app preferences will appear here."
+                            "About StreamOnn" ->
+                                "Your music, your world. StreamOnn is your personal music streaming experience."
+                            else -> "Profile editing will be added here."
+                        },
+                        onBack = {
+                            currentScreen = "Profile"
+                        },
+                        modifier = Modifier.padding(innerPadding)
+                    )
+            }
         }
     }
 }
