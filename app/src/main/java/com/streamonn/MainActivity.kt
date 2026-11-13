@@ -55,6 +55,17 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 
 private val AppBackground = Color(0xFF101010)
 private val CardBackground = Color(0xFF202020)
@@ -125,22 +136,51 @@ fun StreamOnnHome() {
 
         AnimatedContent(
             targetState = currentScreen,
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopStart,
             transitionSpec = {
-                (
-                        fadeIn(animationSpec = tween(250)) +
-                                slideInHorizontally(
-                                    animationSpec = tween(300),
-                                    initialOffsetX = { it / 5 }
+
+                val enterAnimation =
+                    slideInHorizontally(
+                        initialOffsetX = { it },
+                        animationSpec = spring(
+                            dampingRatio = 0.85f,
+                            stiffness = 180f
+                        )
+                    ) +
+                            fadeIn(
+                                animationSpec = tween(350)
+                            ) +
+                            scaleIn(
+                                initialScale = 0.96f,
+                                animationSpec = spring(
+                                    dampingRatio = 0.85f,
+                                    stiffness = 180f
                                 )
-                        ).togetherWith(
-                        fadeOut(animationSpec = tween(150)) +
-                                slideOutHorizontally(
-                                    animationSpec = tween(250),
-                                    targetOffsetX = { -it / 6 }
+                            )
+
+                val exitAnimation =
+                    slideOutHorizontally(
+                        targetOffsetX = { -it / 5 },
+                        animationSpec = spring(
+                            dampingRatio = 0.9f,
+                            stiffness = 180f
+                        )
+                    ) +
+                            fadeOut(
+                                animationSpec = tween(200)
+                            ) +
+                            scaleOut(
+                                targetScale = 0.98f,
+                                animationSpec = spring(
+                                    dampingRatio = 0.9f,
+                                    stiffness = 180f
                                 )
-                    ) using SizeTransform(clip = false)
+                            )
+
+                enterAnimation togetherWith exitAnimation
             },
-            label = "screen_transition"
+            label = "smooth_screen_transition"
         ) { screen ->
 
             when (screen) {
@@ -167,8 +207,8 @@ fun StreamOnnHome() {
                     onBack = {
                         currentScreen = "Home"
                     },
-                    onOptionClick = { option ->
-                        currentScreen = option
+                    onOptionClick = {
+                        currentScreen = it
                     },
                     modifier = Modifier.padding(innerPadding)
                 )
