@@ -67,11 +67,27 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 
-private val AppBackground = Color(0xFF101010)
-private val CardBackground = Color(0xFF202020)
-private val AccentGreen = Color(0xFF1ED760)
-private val PrimaryText = Color(0xFFFFFFFF)
-private val SecondaryText = Color(0xFFB3B3B3)
+object StreamOnnThemeState {
+    var isDark by mutableStateOf(true)
+}
+
+val AppBackground: Color
+    get() = if (StreamOnnThemeState.isDark)
+        Color(0xFF101010) else Color(0xFFF5F5F5)
+
+val CardBackground: Color
+    get() = if (StreamOnnThemeState.isDark)
+        Color(0xFF202020) else Color(0xFFFFFFFF)
+
+val AccentGreen = Color(0xFF1ED760)
+
+val PrimaryText: Color
+    get() = if (StreamOnnThemeState.isDark)
+        Color.White else Color(0xFF171717)
+
+val SecondaryText: Color
+    get() = if (StreamOnnThemeState.isDark)
+        Color(0xFFB3B3B3) else Color(0xFF666666)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
